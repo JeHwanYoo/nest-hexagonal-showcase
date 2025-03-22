@@ -9,6 +9,8 @@ export default tseslint.config(
     ignores: [
       'eslint.config.mjs',
       'src/shared/config/mikro-orm.seed.module.ts',
+      '**/*.spec.ts',
+      '**/*.e2e-spec.ts',
     ],
   },
   eslint.configs.recommended,

@@ -19,9 +19,11 @@ export class UserCreateService implements CreateUserUseCase {
   async createUser(command: CreateUserCommand): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(command.email)
     if (existingUser) {
-      throw new BadRequestException(
-        `이미 존재하는 이메일입니다: ${command.email}`,
-      )
+      throw new BadRequestException(`Email already exists`, {
+        cause: {
+          command,
+        },
+      })
     }
 
     const newUser = User.create(command.email, command.name)

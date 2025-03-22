@@ -9,6 +9,7 @@ import {
   createUserRepositoryMock,
 } from './mock/user.repository.mock'
 import { UserCreateService } from './user.create.service'
+import { BadRequestException } from '@nestjs/common'
 
 describe('UserCreateService', () => {
   let service: UserCreateService
@@ -86,14 +87,18 @@ describe('UserCreateService', () => {
       userRepositoryMock.findByEmail.mockResolvedValue(existingUser)
 
       // Got & Then
-      await expect(service.createUser(createUserCommand)).rejects.toThrow(
-        `이미 존재하는 이메일입니다: ${createUserCommand.email}`,
-      )
-
-      expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(
-        createUserCommand.email,
-      )
-      expect(userRepositoryMock.save).not.toHaveBeenCalled()
+      try {
+        await service.createUser(createUserCommand)
+        expect(true).toBe(false)
+      } catch (error) {
+        expect(error).toBeInstanceOf(BadRequestException)
+        expect(error.message).toBe('Email already exists')
+        expect(error.cause).toEqual({ command: createUserCommand })
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(
+          createUserCommand.email,
+        )
+        expect(userRepositoryMock.save).not.toHaveBeenCalled()
+      }
     })
   })
 })
