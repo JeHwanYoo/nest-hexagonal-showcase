@@ -8,12 +8,12 @@ import { UserEntity } from './entities/user.entity'
 export class UserMikroOrmRepository implements UserRepositoryPort {
   constructor(private readonly em: EntityManager) {}
 
-  async findById(id: string): Promise<User | null> {
+  async findOneById(id: string): Promise<User | null> {
     const entity = await this.em.findOne(UserEntity, { id })
     return entity ? entity.toDomain() : null
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findOneByEmail(email: string): Promise<User | null> {
     const entity = await this.em.findOne(UserEntity, { email })
     return entity ? entity.toDomain() : null
   }

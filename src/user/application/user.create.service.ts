@@ -17,7 +17,7 @@ export class UserCreateService implements CreateUserUseCase {
   ) {}
 
   async createUser(command: CreateUserCommand): Promise<User> {
-    const existingUser = await this.userRepository.findByEmail(command.email)
+    const existingUser = await this.userRepository.findOneByEmail(command.email)
     if (existingUser) {
       throw new BadRequestException(`Email already exists`, {
         cause: {

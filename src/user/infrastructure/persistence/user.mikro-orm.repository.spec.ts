@@ -75,7 +75,7 @@ describe('UserMikroOrmRepository', () => {
       const savedUser = await repository.save(user)
 
       // Got
-      const foundUser = await repository.findById(savedUser.id)
+      const foundUser = await repository.findOneById(savedUser.id)
 
       // Then
       expect(foundUser).toBeDefined()
@@ -89,7 +89,7 @@ describe('UserMikroOrmRepository', () => {
       const nonExistentId = 'non-existent-id'
 
       // Got
-      const foundUser = await repository.findById(nonExistentId)
+      const foundUser = await repository.findOneById(nonExistentId)
 
       // Then
       expect(foundUser).toBeNull()
@@ -103,7 +103,7 @@ describe('UserMikroOrmRepository', () => {
       await repository.save(user)
 
       // Got
-      const foundUser = await repository.findByEmail(user.email)
+      const foundUser = await repository.findOneByEmail(user.email)
 
       // Then
       expect(foundUser).toBeDefined()
@@ -117,7 +117,7 @@ describe('UserMikroOrmRepository', () => {
       const nonExistentEmail = 'non-existent@example.com'
 
       // Got
-      const foundUser = await repository.findByEmail(nonExistentEmail)
+      const foundUser = await repository.findOneByEmail(nonExistentEmail)
 
       // Then
       expect(foundUser).toBeNull()

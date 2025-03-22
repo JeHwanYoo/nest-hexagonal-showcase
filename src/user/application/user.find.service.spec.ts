@@ -45,15 +45,15 @@ describe('UserFindService', () => {
         name: randFirstName(),
       })
 
-      userRepositoryMock.findById.mockResolvedValue(mockUser)
+      userRepositoryMock.findOneById.mockResolvedValue(mockUser)
 
       // Got
       const result = await service.findOneById(mockUser.id)
 
       // Then
       expect(result).toEqual(mockUser)
-      expect(userRepositoryMock.findById).toHaveBeenCalledWith(mockUser.id)
-      expect(userRepositoryMock.findById).toHaveBeenCalledTimes(1)
+      expect(userRepositoryMock.findOneById).toHaveBeenCalledWith(mockUser.id)
+      expect(userRepositoryMock.findOneById).toHaveBeenCalledTimes(1)
     })
 
     it('should return null when user not found by id', async () => {
@@ -63,15 +63,15 @@ describe('UserFindService', () => {
         name: randFirstName(),
       })
 
-      userRepositoryMock.findById.mockResolvedValue(null)
+      userRepositoryMock.findOneById.mockResolvedValue(null)
 
       // Got
       const result = await service.findOneById(mockUser.id)
 
       // Then
       expect(result).toBeNull()
-      expect(userRepositoryMock.findById).toHaveBeenCalledWith(mockUser.id)
-      expect(userRepositoryMock.findById).toHaveBeenCalledTimes(1)
+      expect(userRepositoryMock.findOneById).toHaveBeenCalledWith(mockUser.id)
+      expect(userRepositoryMock.findOneById).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -83,17 +83,17 @@ describe('UserFindService', () => {
         name: randFirstName(),
       })
 
-      userRepositoryMock.findByEmail.mockResolvedValue(mockUser)
+      userRepositoryMock.findOneByEmail.mockResolvedValue(mockUser)
 
       // Got
       const result = await service.findOneByEmail(mockUser.email)
 
       // Then
       expect(result).toEqual(mockUser)
-      expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(
+      expect(userRepositoryMock.findOneByEmail).toHaveBeenCalledWith(
         mockUser.email,
       )
-      expect(userRepositoryMock.findByEmail).toHaveBeenCalledTimes(1)
+      expect(userRepositoryMock.findOneByEmail).toHaveBeenCalledTimes(1)
     })
 
     it('should return null when user not found by email', async () => {
@@ -103,17 +103,17 @@ describe('UserFindService', () => {
         name: randFirstName(),
       })
 
-      userRepositoryMock.findByEmail.mockResolvedValue(null)
+      userRepositoryMock.findOneByEmail.mockResolvedValue(null)
 
       // Got
       const result = await service.findOneByEmail(mockUser.email)
 
       // Then
       expect(result).toBeNull()
-      expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(
+      expect(userRepositoryMock.findOneByEmail).toHaveBeenCalledWith(
         mockUser.email,
       )
-      expect(userRepositoryMock.findByEmail).toHaveBeenCalledTimes(1)
+      expect(userRepositoryMock.findOneByEmail).toHaveBeenCalledTimes(1)
     })
   })
 

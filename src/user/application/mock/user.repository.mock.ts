@@ -1,8 +1,8 @@
 import { vi } from 'vitest'
 
 export const createUserRepositoryMock = () => ({
-  findById: vi.fn(),
-  findByEmail: vi.fn(),
+  findOneById: vi.fn(),
+  findOneByEmail: vi.fn(),
   findAll: vi.fn(),
   save: vi.fn(),
 })

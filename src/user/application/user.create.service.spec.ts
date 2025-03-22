@@ -47,7 +47,7 @@ describe('UserCreateService', () => {
         name: randFirstName(),
       }
 
-      userRepositoryMock.findByEmail.mockResolvedValue(null)
+      userRepositoryMock.findOneByEmail.mockResolvedValue(null)
 
       const createdUser = new User({
         email: createUserCommand.email,
@@ -61,7 +61,7 @@ describe('UserCreateService', () => {
 
       // Then
       expect(result).toEqual(createdUser)
-      expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(
+      expect(userRepositoryMock.findOneByEmail).toHaveBeenCalledWith(
         createUserCommand.email,
       )
       expect(userRepositoryMock.save).toHaveBeenCalledWith(
@@ -84,7 +84,7 @@ describe('UserCreateService', () => {
         name: createUserCommand.name,
       })
 
-      userRepositoryMock.findByEmail.mockResolvedValue(existingUser)
+      userRepositoryMock.findOneByEmail.mockResolvedValue(existingUser)
 
       // Got & Then
       try {
@@ -94,7 +94,7 @@ describe('UserCreateService', () => {
         expect(error).toBeInstanceOf(BadRequestException)
         expect(error.message).toBe('Email already exists')
         expect(error.cause).toEqual({ command: createUserCommand })
-        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(
+        expect(userRepositoryMock.findOneByEmail).toHaveBeenCalledWith(
           createUserCommand.email,
         )
         expect(userRepositoryMock.save).not.toHaveBeenCalled()

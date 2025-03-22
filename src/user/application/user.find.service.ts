@@ -14,11 +14,11 @@ export class UserFindService implements FindUserUseCase {
   ) {}
 
   async findOneById(id: string): Promise<User | null> {
-    return this.userRepository.findById(id)
+    return this.userRepository.findOneById(id)
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findByEmail(email)
+    return this.userRepository.findOneByEmail(email)
   }
 
   async findAll(): Promise<User[]> {
