@@ -27,11 +27,6 @@ async function bootstrap() {
       .setTitle(packageInfo.get('name') as string)
       .setDescription(packageInfo.get('description') as string)
       .setVersion(packageInfo.get('version') as string)
-      .addTag(
-        (packageInfo.get('version') as string).startsWith('0.')
-          ? 'beta'
-          : `${(packageInfo.get('version') as string).split('.')[0]}.x`,
-      )
       .build()
     const documentFactory = () => SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('docs', app, documentFactory)
