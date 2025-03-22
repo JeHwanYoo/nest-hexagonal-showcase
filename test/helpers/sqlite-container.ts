@@ -21,13 +21,6 @@ export class SqliteContainer {
           '-c',
           'apk add --no-cache sqlite && tail -f /dev/null',
         ])
-        .withBindMounts([
-          {
-            source: testDbDir,
-            target: '/data',
-            mode: 'rw',
-          },
-        ])
         .start()
 
       await this.container.exec([
