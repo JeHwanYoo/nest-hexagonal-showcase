@@ -24,6 +24,8 @@ export default defineConfig({
         '**/dist/**',
         '**/.{idea,git,cache,output,temp}/**',
         '**/*.e2e-spec.ts',
+        'src/app.controller.ts',
+        'src/app.service.ts',
       ],
     },
   },

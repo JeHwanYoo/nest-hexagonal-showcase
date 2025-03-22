@@ -22,6 +22,8 @@ export default defineConfig({
         '**/node_modules/**',
         '**/dist/**',
         '**/.{idea,git,cache,output,temp}/**',
+        'src/app.controller.ts',
+        'src/app.service.ts',
       ],
     },
   },
