@@ -1,14 +1,15 @@
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
 import { ValidationPipe } from '@nestjs/common'
-import { DocumentBuilder } from '@nestjs/swagger'
-import * as fs from 'fs'
-import * as path from 'path'
-import { SwaggerModule } from '@nestjs/swagger'
+import { NestFactory } from '@nestjs/core'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AppModule } from './app.module'
 
-const packageJson = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'),
-) as Record<string, unknown>
+let packageInfo = new Map<string, string>()
+packageInfo.set('name', process.env.APP_NAME ?? 'nest-hexagonal-showcase')
+packageInfo.set(
+  'description',
+  process.env.APP_DESCRIPTION ?? 'NestJS Hexagonal Architecture Showcase',
+)
+packageInfo.set('version', process.env.APP_VERSION ?? '0.0.1')
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -23,13 +24,13 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV === 'development') {
     const config = new DocumentBuilder()
-      .setTitle(packageJson.name as string)
-      .setDescription(packageJson.description as string)
-      .setVersion(packageJson.version as string)
+      .setTitle(packageInfo.get('name') as string)
+      .setDescription(packageInfo.get('description') as string)
+      .setVersion(packageInfo.get('version') as string)
       .addTag(
-        (packageJson.version as string).startsWith('0.')
+        (packageInfo.get('version') as string).startsWith('0.')
           ? 'beta'
-          : `${(packageJson.version as string).split('.')[0]}.x`,
+          : `${(packageInfo.get('version') as string).split('.')[0]}.x`,
       )
       .build()
     const documentFactory = () => SwaggerModule.createDocument(app, config)

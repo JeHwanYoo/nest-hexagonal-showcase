@@ -1,12 +1,11 @@
 {
   "name": "nest-hexagonal-showcase",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "description": "NestJS Hexagonal Architecture Showcase",
+  "author": "JeHwanYoo <yoojehwan@gmail.com>",
+  "license": "MIT",
   "scripts": {
-    "build": "nest build && cp package.json dist/",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "NODE_ENV=development nest start --debug --watch",
