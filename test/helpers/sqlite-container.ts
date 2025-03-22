@@ -1,25 +1,33 @@
 import { GenericContainer, StartedTestContainer } from 'testcontainers'
-import { mkdirSync, existsSync } from 'fs'
+import { mkdirSync, existsSync, unlinkSync, rmSync } from 'fs'
 import { join } from 'path'
 
 export class SqliteContainer {
   private static container: StartedTestContainer
   private static dbPath: string
+  private static testDbDir: string
 
   static async start(): Promise<StartedTestContainer> {
     if (!this.container) {
-      const testDbDir = join(process.cwd(), 'test-db')
-      if (!existsSync(testDbDir)) {
-        mkdirSync(testDbDir, { recursive: true })
+      this.testDbDir = join(process.cwd(), 'test-db')
+      if (!existsSync(this.testDbDir)) {
+        mkdirSync(this.testDbDir, { recursive: true })
       }
 
-      this.dbPath = join(testDbDir, 'test.db')
+      this.dbPath = join(this.testDbDir, 'test.db')
 
       this.container = await new GenericContainer('alpine:latest')
         .withCommand([
           'sh',
           '-c',
           'apk add --no-cache sqlite && tail -f /dev/null',
+        ])
+        .withBindMounts([
+          {
+            source: this.testDbDir,
+            target: '/data',
+            mode: 'rw',
+          },
         ])
         .start()
 
@@ -42,11 +50,37 @@ export class SqliteContainer {
     }
   }
 
+  static async cleanup(): Promise<void> {
+    try {
+      if (this.dbPath && existsSync(this.dbPath)) {
+        unlinkSync(this.dbPath)
+      }
+
+      const walFile = `${this.dbPath}-wal`
+      const shmFile = `${this.dbPath}-shm`
+
+      if (existsSync(walFile)) {
+        unlinkSync(walFile)
+      }
+
+      if (existsSync(shmFile)) {
+        unlinkSync(shmFile)
+      }
+
+      if (this.testDbDir && existsSync(this.testDbDir)) {
+        rmSync(this.testDbDir, { recursive: true, force: true })
+      }
+
+      console.log('Test database files cleaned up')
+    } catch (error) {
+      console.error('Error cleaning up test database files:', error)
+    }
+  }
+
   static async getConnectionOptions() {
     await this.start()
 
     return {
-      // 실제로는 호스트 시스템의 파일 경로를 반환
       dbPath: this.dbPath,
     }
   }

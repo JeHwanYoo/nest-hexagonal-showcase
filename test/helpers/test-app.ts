@@ -73,5 +73,6 @@ export class TestApp {
     }
 
     await SqliteContainer.stop()
+    await SqliteContainer.cleanup()
   }
 }
