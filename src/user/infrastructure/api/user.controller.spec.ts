@@ -15,6 +15,7 @@ import {
   createFindUserUseCaseMock,
 } from './mock/find-user-usecase.mock'
 import { randEmail, randFirstName } from '@ngneat/falso'
+import { v7 as uuidv7 } from 'uuid'
 
 describe('UserController', () => {
   let controller: UserController
@@ -22,7 +23,7 @@ describe('UserController', () => {
   let findUserUseCaseMock: FindUserUseCaseMock
 
   beforeEach(async () => {
-    // Create mock implementations
+    // Given
     createUserUseCaseMock = createCreateUserUseCaseMock()
     findUserUseCaseMock = createFindUserUseCaseMock()
 
@@ -51,25 +52,26 @@ describe('UserController', () => {
     expect(controller).toBeDefined()
   })
 
-  describe('createUser', () => {
-    it('should create user and return UserResponseDto', async () => {
-      // When
+  describe('createUser method', () => {
+    it('should create a user and return UserResponseDto with valid user information', async () => {
+      // Given
       const createUserDto: CreateUserDto = {
         email: randEmail(),
         name: randFirstName(),
       }
 
-      const createdUser = new User({
-        id: '123',
+      const userId = uuidv7()
+      const expectedUser = new User({
+        id: userId,
         email: createUserDto.email,
         name: createUserDto.name,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
 
-      createUserUseCaseMock.createUser.mockResolvedValue(createdUser)
+      createUserUseCaseMock.createUser.mockResolvedValue(expectedUser)
 
-      // Got
+      // When
       const result = await controller.createUser(createUserDto)
 
       // Then
@@ -77,17 +79,17 @@ describe('UserController', () => {
         createUserDto,
       )
       expect(result).toBeDefined()
-      expect(result.id).toBe(createdUser.id)
-      expect(result.email).toBe(createdUser.email)
-      expect(result.name).toBe(createdUser.name)
+      expect(result.id).toBe(userId)
+      expect(result.email).toBe(expectedUser.email)
+      expect(result.name).toBe(expectedUser.name)
     })
   })
 
-  describe('getUserById', () => {
-    it('should find user by ID and return UserResponseDto', async () => {
-      // When
-      const userId = '123'
-      const user = new User({
+  describe('getUserById method', () => {
+    it('should return UserResponseDto when querying with an existing user ID', async () => {
+      // Given
+      const userId = uuidv7()
+      const expectedUser = new User({
         id: userId,
         email: randEmail(),
         name: randFirstName(),
@@ -95,45 +97,49 @@ describe('UserController', () => {
         updatedAt: new Date(),
       })
 
-      findUserUseCaseMock.findOneById.mockResolvedValue(user)
+      findUserUseCaseMock.findOneById.mockResolvedValue(expectedUser)
 
-      // Got
+      // When
       const result = await controller.getUserById(userId)
 
       // Then
       expect(findUserUseCaseMock.findOneById).toHaveBeenCalledWith(userId)
       expect(result).toBeDefined()
-      expect(result.id).toBe(user.id)
-      expect(result.email).toBe(user.email)
-      expect(result.name).toBe(user.name)
+      expect(result.id).toBe(userId)
+      expect(result.email).toBe(expectedUser.email)
+      expect(result.name).toBe(expectedUser.name)
     })
 
-    it('should throw NotFoundException when user does not exist', async () => {
-      // When
-      const userId = 'non-existent-id'
+    it('should throw NotFoundException when querying with a non-existent user ID', async () => {
+      // Given
+      const nonExistentUserId = uuidv7()
       findUserUseCaseMock.findOneById.mockResolvedValue(null)
 
-      // Got & Then
-      await expect(controller.getUserById(userId)).rejects.toThrow(
+      // When & Then
+      await expect(controller.getUserById(nonExistentUserId)).rejects.toThrow(
         NotFoundException,
       )
-      expect(findUserUseCaseMock.findOneById).toHaveBeenCalledWith(userId)
+      expect(findUserUseCaseMock.findOneById).toHaveBeenCalledWith(
+        nonExistentUserId,
+      )
     })
   })
 
-  describe('getAllUsers', () => {
-    it('should find all users and return UserResponseDto array', async () => {
-      // When
-      const users = [
+  describe('getUsers method', () => {
+    it('should return an array of UserResponseDto when users exist', async () => {
+      // Given
+      const user1Id = uuidv7()
+      const user2Id = uuidv7()
+      const expectedUsers = [
         new User({
-          id: '123',
+          id: user1Id,
           email: randEmail(),
           name: randFirstName(),
           createdAt: new Date(),
           updatedAt: new Date(),
         }),
         new User({
-          id: '456',
+          id: user2Id,
           email: randEmail(),
           name: randFirstName(),
           createdAt: new Date(),
@@ -141,32 +147,74 @@ describe('UserController', () => {
         }),
       ]
 
-      findUserUseCaseMock.findAll.mockResolvedValue(users)
+      findUserUseCaseMock.findAll.mockResolvedValue(expectedUsers)
 
-      // Got
-      const result = await controller.getAllUsers()
+      // When
+      const result = await controller.getUsers()
 
       // Then
       expect(findUserUseCaseMock.findAll).toHaveBeenCalled()
       expect(result).toHaveLength(2)
-      expect(result[0].id).toBe(users[0].id)
-      expect(result[0].email).toBe(users[0].email)
-      expect(result[0].name).toBe(users[0].name)
-      expect(result[1].id).toBe(users[1].id)
-      expect(result[1].email).toBe(users[1].email)
-      expect(result[1].name).toBe(users[1].name)
+      expect(result[0].id).toBe(user1Id)
+      expect(result[0].email).toBe(expectedUsers[0].email)
+      expect(result[0].name).toBe(expectedUsers[0].name)
+      expect(result[1].id).toBe(user2Id)
+      expect(result[1].email).toBe(expectedUsers[1].email)
+      expect(result[1].name).toBe(expectedUsers[1].name)
     })
 
-    it('should return empty array when no users exist', async () => {
-      // When
+    it('should return an empty array when no users exist', async () => {
+      // Given
       findUserUseCaseMock.findAll.mockResolvedValue([])
 
-      // Got
-      const result = await controller.getAllUsers()
+      // When
+      const result = await controller.getUsers()
 
       // Then
       expect(findUserUseCaseMock.findAll).toHaveBeenCalled()
       expect(result).toHaveLength(0)
+      expect(Array.isArray(result)).toBe(true)
+    })
+
+    it('should return an array with one user when searching by email and user exists', async () => {
+      // Given
+      const userEmail = randEmail()
+      const userId = uuidv7()
+      const expectedUser = new User({
+        id: userId,
+        email: userEmail,
+        name: randFirstName(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+
+      findUserUseCaseMock.findOneByEmail.mockResolvedValue(expectedUser)
+
+      // When
+      const result = await controller.getUsers(userEmail)
+
+      // Then
+      expect(findUserUseCaseMock.findOneByEmail).toHaveBeenCalledWith(userEmail)
+      expect(result).toHaveLength(1)
+      expect(result[0].id).toBe(userId)
+      expect(result[0].email).toBe(expectedUser.email)
+      expect(result[0].name).toBe(expectedUser.name)
+    })
+
+    it('should return an empty array when searching by email and user does not exist', async () => {
+      // Given
+      const nonExistentEmail = 'nonexistent@example.com'
+      findUserUseCaseMock.findOneByEmail.mockResolvedValue(null)
+
+      // When
+      const result = await controller.getUsers(nonExistentEmail)
+
+      // Then
+      expect(findUserUseCaseMock.findOneByEmail).toHaveBeenCalledWith(
+        nonExistentEmail,
+      )
+      expect(result).toHaveLength(0)
+      expect(Array.isArray(result)).toBe(true)
     })
   })
 })
