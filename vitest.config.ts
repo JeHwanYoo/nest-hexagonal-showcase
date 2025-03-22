@@ -6,6 +6,20 @@ export default defineConfig({
   test: {
     globals: true,
     root: './',
+    include: ['**/*.spec.ts'],
+    exclude: ['**/node_modules/**', '**/dist/**', 'test/**'],
+    environment: 'node',
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      reportsDirectory: './coverage/unit',
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/.{idea,git,cache,output,temp}/**',
+        '**/*.e2e-spec.ts',
+      ],
+    },
   },
   plugins: [
     // This is required to build the test files with SWC
