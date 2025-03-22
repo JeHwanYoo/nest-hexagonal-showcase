@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import { User } from '../domain/model/user.model'
 import {
   CreateUserCommand,
@@ -19,7 +19,9 @@ export class UserCreateService implements CreateUserUseCase {
   async createUser(command: CreateUserCommand): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(command.email)
     if (existingUser) {
-      throw new Error(`이미 존재하는 이메일입니다: ${command.email}`)
+      throw new BadRequestException(
+        `이미 존재하는 이메일입니다: ${command.email}`,
+      )
     }
 
     const newUser = User.create(command.email, command.name)

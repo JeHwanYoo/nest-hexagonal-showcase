@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common'
 import {
   CREATE_USER_USE_CASE_PORT,
@@ -17,7 +18,7 @@ import {
 } from '../../domain/ports/in/find-user.usecase'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserResponseDto } from './dto/user-response.dto'
-import { ApiBody, ApiOperation } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger'
 
 @Controller('users')
 export class UserController {
@@ -37,6 +38,23 @@ export class UserController {
     return UserResponseDto.fromDomain(user)
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get All Users or Find Users By Email' })
+  @ApiQuery({ name: 'email', required: false })
+  @ApiBody({ type: UserResponseDto, isArray: true })
+  async getUsers(@Query('email') email?: string): Promise<UserResponseDto[]> {
+    if (email) {
+      const user = await this.findUserUseCase.findOneByEmail(email)
+      if (!user) {
+        throw new NotFoundException(`사용자를 찾을 수 없습니다: ${email}`)
+      }
+      return [UserResponseDto.fromDomain(user)]
+    }
+
+    const users = await this.findUserUseCase.findAll()
+    return users.map((user) => UserResponseDto.fromDomain(user))
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get User By Id' })
   @ApiBody({ type: UserResponseDto })
@@ -46,13 +64,5 @@ export class UserController {
       throw new NotFoundException(`사용자를 찾을 수 없습니다: ${id}`)
     }
     return UserResponseDto.fromDomain(user)
-  }
-
-  @Get()
-  @ApiOperation({ summary: 'Get All Users' })
-  @ApiBody({ type: UserResponseDto, isArray: true })
-  async getAllUsers(): Promise<UserResponseDto[]> {
-    const users = await this.findUserUseCase.findAll()
-    return users.map((user) => UserResponseDto.fromDomain(user))
   }
 }
