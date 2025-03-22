@@ -28,21 +28,33 @@ jobs:
       - name: Run unit tests with coverage
         run: pnpm test:cov
         
+      - name: Debug coverage directory
+        run: |
+          ls -la
+          ls -la coverage || echo "Coverage directory does not exist"
+          find ./coverage -type f -name "*.json" || echo "No JSON files found in coverage directory"
+        
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/coverage-final.json
+          directory: ./coverage/unit/
           fail_ci_if_error: true
           flags: unit
           
       - name: Run E2E tests with coverage
         run: pnpm test:e2e:cov
         
+      - name: Debug E2E coverage directory
+        run: |
+          ls -la
+          ls -la coverage || echo "Coverage directory does not exist"
+          find ./coverage -type f -name "*.json" || echo "No JSON files found in coverage directory"
+        
       - name: Upload E2E coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/coverage-final.json
+          directory: ./coverage/e2e/
           fail_ci_if_error: true
           flags: e2e 

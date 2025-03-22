@@ -6,14 +6,14 @@
   <a href="https://vitest.dev" target="_blank">
     <img src="https://img.shields.io/badge/tested%20with-vitest-6E9F18.svg?style=flat" alt="Tested with Vitest" />
   </a>
-  <a href="https://github.com/yourusername/nest-hexagonal-showcase/actions" target="_blank">
-    <img src="https://github.com/yourusername/nest-hexagonal-showcase/actions/workflows/test.yml/badge.svg" alt="Tests" />
+  <a href="https://github.com/yujehwan/nest-hexagonal-showcase/actions" target="_blank">
+    <img src="https://github.com/yujehwan/nest-hexagonal-showcase/actions/workflows/test.yml/badge.svg" alt="Tests" />
   </a>
-  <a href="https://codecov.io/gh/yourusername/nest-hexagonal-showcase" target="_blank">
-    <img src="https://codecov.io/gh/yourusername/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=unit" alt="Unit Test Coverage" />
+  <a href="https://codecov.io/gh/yujehwan/nest-hexagonal-showcase" target="_blank">
+    <img src="https://codecov.io/gh/yujehwan/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=unit" alt="Unit Test Coverage" />
   </a>
-  <a href="https://codecov.io/gh/yourusername/nest-hexagonal-showcase" target="_blank">
-    <img src="https://codecov.io/gh/yourusername/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=e2e" alt="E2E Test Coverage" />
+  <a href="https://codecov.io/gh/yujehwan/nest-hexagonal-showcase" target="_blank">
+    <img src="https://codecov.io/gh/yujehwan/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=e2e" alt="E2E Test Coverage" />
   </a>
 </p>
 
