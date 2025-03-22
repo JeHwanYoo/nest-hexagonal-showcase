@@ -1,26 +1,140 @@
-import { AppModule } from '@/app.module'
 import { INestApplication } from '@nestjs/common'
-import { Test, TestingModule } from '@nestjs/testing'
+import { TestApp } from './helpers/test-app'
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
-import { App } from 'supertest/types'
-import { describe, it } from 'vitest'
+import { randEmail, randFirstName } from '@ngneat/falso'
+import { ValidationPipe } from '@nestjs/common'
 
-describe('AppController (e2e)', () => {
-  let app: INestApplication<App>
+describe('User API (e2e)', () => {
+  let app: INestApplication
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile()
-
+  beforeAll(async () => {
+    const moduleFixture = await TestApp.create()
     app = moduleFixture.createNestApplication()
+    
+    // ValidationPipe 추가
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }))
+    
     await app.init()
+  }, 60000)
+
+  afterAll(async () => {
+    await app.close()
+    await TestApp.cleanup()
   })
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!')
+  it('should be defined', () => {
+    expect(app).toBeDefined()
+  })
+
+  describe('POST /users', () => {
+    it('should create a new user', async () => {
+      // When
+      const userData = {
+        email: randEmail(),
+        name: randFirstName(),
+      }
+
+      // Got
+      const response = await request(app.getHttpServer())
+        .post('/users')
+        .send(userData)
+        .expect(201)
+
+      // Then
+      expect(response.body).toBeDefined()
+      expect(response.body.id).toBeDefined()
+      expect(response.body.email).toBe(userData.email)
+      expect(response.body.name).toBe(userData.name)
+      expect(response.body.createdAt).toBeDefined()
+      expect(response.body.updatedAt).toBeDefined()
+    })
+
+    it('should fail with invalid data', async () => {
+      // When
+      const userData = {
+        name: randFirstName(),
+      }
+
+      // Got & Then
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(userData)
+        .expect(400)
+    })
+  })
+
+  describe('GET /users/:id', () => {
+    it('should get user by id', async () => {
+      // When
+      const userData = {
+        email: randEmail(),
+        name: randFirstName(),
+      }
+
+      const createResponse = await request(app.getHttpServer())
+        .post('/users')
+        .send(userData)
+        .expect(201)
+
+      const userId = createResponse.body.id
+
+      // Got
+      const response = await request(app.getHttpServer())
+        .get(`/users/${userId}`)
+        .expect(200)
+
+      // Then
+      expect(response.body).toBeDefined()
+      expect(response.body.id).toBe(userId)
+      expect(response.body.email).toBe(userData.email)
+      expect(response.body.name).toBe(userData.name)
+    })
+
+    it('should return 404 for non-existent user', async () => {
+      // When
+      const nonExistentId = 'non-existent-id'
+
+      // Got & Then
+      await request(app.getHttpServer())
+        .get(`/users/${nonExistentId}`)
+        .expect(404)
+    })
+  })
+
+  describe('GET /users', () => {
+    it('should get all users', async () => {
+      // When
+      const user1 = {
+        email: randEmail(),
+        name: randFirstName(),
+      }
+
+      const user2 = {
+        email: randEmail(),
+        name: randFirstName(),
+      }
+
+      await request(app.getHttpServer()).post('/users').send(user1).expect(201)
+      await request(app.getHttpServer()).post('/users').send(user2).expect(201)
+
+      // Got
+      const response = await request(app.getHttpServer())
+        .get('/users')
+        .expect(200)
+
+      // Then
+      expect(response.body).toBeDefined()
+      expect(Array.isArray(response.body)).toBe(true)
+      expect(response.body.length).toBeGreaterThanOrEqual(2)
+
+      // Check if our users are included
+      expect(response.body.some((u) => u.email === user1.email)).toBe(true)
+      expect(response.body.some((u) => u.email === user2.email)).toBe(true)
+    })
   })
 })
