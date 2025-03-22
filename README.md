@@ -9,11 +9,8 @@
   <a href="https://github.com/JeHwanYoo/nest-hexagonal-showcase/actions" target="_blank">
     <img src="https://github.com/JeHwanYoo/nest-hexagonal-showcase/actions/workflows/test.yml/badge.svg" alt="Tests" />
   </a>
-  <a href="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase" target="_blank">
-    <img src="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=unit" alt="Unit Test Coverage" />
-  </a>
-  <a href="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase" target="_blank">
-    <img src="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=e2e" alt="E2E Test Coverage" />
+  <a href="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase" > 
+    <img src="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase/branch/main/graph/badge.svg?token=9E5465GZVJ"/> 
   </a>
 </p>
 
