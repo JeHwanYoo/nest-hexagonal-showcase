@@ -3,13 +3,13 @@
 </p>
 
 <p align="center">
-  <a href="https://vitest.dev" target="_blank">
+  <a href="https://vitest.dev" target="_blank" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/tested%20with-vitest-6E9F18.svg?style=flat" alt="Tested with Vitest" />
   </a>
-  <a href="https://github.com/JeHwanYoo/nest-hexagonal-showcase/actions" target="_blank">
+  <a href="https://github.com/JeHwanYoo/nest-hexagonal-showcase/actions" target="_blank" style="text-decoration: none;">
     <img src="https://github.com/JeHwanYoo/nest-hexagonal-showcase/actions/workflows/test.yml/badge.svg" alt="Tests" />
   </a>
-  <a href="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase" > 
+  <a href="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase" style="text-decoration: none;"> 
     <img src="https://codecov.io/gh/JeHwanYoo/nest-hexagonal-showcase/branch/main/graph/badge.svg?token=9E5465GZVJ"/> 
   </a>
 </p>
