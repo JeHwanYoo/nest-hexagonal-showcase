@@ -25,14 +25,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
         
+      - name: Run unit test:
+        run: pnpm test
+
       - name: Run unit tests with coverage
         run: pnpm test:cov
-        
-      - name: Debug coverage directory
-        run: |
-          ls -la
-          ls -la coverage || echo "Coverage directory does not exist"
-          find ./coverage -type f -name "*.json" || echo "No JSON files found in coverage directory"
         
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -42,15 +39,12 @@ jobs:
           fail_ci_if_error: true
           flags: unit
           slug: JeHwanYoo/nest-hexagonal-showcase
-          
+      
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
       - name: Run E2E tests with coverage
         run: pnpm test:e2e:cov
-        
-      - name: Debug E2E coverage directory
-        run: |
-          ls -la
-          ls -la coverage || echo "Coverage directory does not exist"
-          find ./coverage -type f -name "*.json" || echo "No JSON files found in coverage directory"
         
       - name: Upload E2E coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -60,4 +54,3 @@ jobs:
           fail_ci_if_error: true
           flags: e2e
           slug: JeHwanYoo/nest-hexagonal-showcase 
-          
