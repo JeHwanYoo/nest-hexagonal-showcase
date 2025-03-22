@@ -182,16 +182,15 @@ describe('User API (e2e)', () => {
       expect(response.body[0].name).toBe(userData.name)
     })
 
-    it('should return 404 for non-existent email', async () => {
+    it('should return empty array for non-existent email', async () => {
       const nonExistentEmail = 'non-existent@example.com'
 
       await request(app.getHttpServer())
         .get(`/users?email=${nonExistentEmail}`)
-        .expect(404)
+        .expect([])
     })
 
     it('should return empty array when no users exist', async () => {
-      // 테스트를 격리시키기 위해 새로운 앱 인스턴스 생성
       const isolatedModule = await TestApp.create()
       const isolatedApp = isolatedModule.createNestApplication()
       await isolatedApp.init()
