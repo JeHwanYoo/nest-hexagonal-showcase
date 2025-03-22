@@ -41,6 +41,7 @@ jobs:
           directory: ./coverage/unit/
           fail_ci_if_error: true
           flags: unit
+          slug: JeHwanYoo/nest-hexagonal-showcase
           
       - name: Run E2E tests with coverage
         run: pnpm test:e2e:cov
@@ -57,4 +58,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/e2e/
           fail_ci_if_error: true
-          flags: e2e 
+          flags: e2e
+          slug: JeHwanYoo/nest-hexagonal-showcase 
+          
