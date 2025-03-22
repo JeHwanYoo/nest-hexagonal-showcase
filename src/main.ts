@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 
-let packageInfo = new Map<string, string>()
+const packageInfo = new Map<string, string>()
 packageInfo.set('name', process.env.APP_NAME ?? 'nest-hexagonal-showcase')
 packageInfo.set(
   'description',
