@@ -2,6 +2,21 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
+<p align="center">
+  <a href="https://vitest.dev" target="_blank">
+    <img src="https://img.shields.io/badge/tested%20with-vitest-6E9F18.svg?style=flat" alt="Tested with Vitest" />
+  </a>
+  <a href="https://github.com/yourusername/nest-hexagonal-showcase/actions" target="_blank">
+    <img src="https://github.com/yourusername/nest-hexagonal-showcase/actions/workflows/test.yml/badge.svg" alt="Tests" />
+  </a>
+  <a href="https://codecov.io/gh/yourusername/nest-hexagonal-showcase" target="_blank">
+    <img src="https://codecov.io/gh/yourusername/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=unit" alt="Unit Test Coverage" />
+  </a>
+  <a href="https://codecov.io/gh/yourusername/nest-hexagonal-showcase" target="_blank">
+    <img src="https://codecov.io/gh/yourusername/nest-hexagonal-showcase/branch/main/graph/badge.svg?flag=e2e" alt="E2E Test Coverage" />
+  </a>
+</p>
+
 # NestJS Hexagonal Architecture Showcase
 
 ## Description

@@ -1,0 +1,31 @@
+codecov:
+  require_ci_to_pass: yes
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  status:
+    project:
+      default: false
+      unit:
+        flags: [unit]
+        target: 80%
+      e2e:
+        flags: [e2e]
+        target: 70%
+
+flags:
+  unit:
+    paths:
+      - src/
+    carryforward: true
+  e2e:
+    paths:
+      - test/
+    carryforward: true
+
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: false 
