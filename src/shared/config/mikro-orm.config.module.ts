@@ -43,8 +43,14 @@ export class MikroOrmConfigModule implements OnModuleInit {
 
     if (isDevelopment) {
       const generator = this.orm.getSchemaGenerator()
-      await generator.createSchema()
-      await generator.updateSchema()
+      await generator.ensureDatabase()
+      const updateSchemaSql = await generator.getUpdateSchemaSQL()
+      if (updateSchemaSql) {
+        await generator.updateSchema({
+          safe: true,
+          dropTables: false,
+        })
+      }
     }
   }
 }
