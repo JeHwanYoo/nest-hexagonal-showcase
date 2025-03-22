@@ -66,6 +66,29 @@ describe('User API (e2e)', () => {
         .send(userData)
         .expect(400)
     })
+
+    it('should fail when email already exists', async () => {
+      // When
+      const userData = {
+        email: randEmail(),
+        name: randFirstName(),
+      }
+
+      // 먼저 사용자 생성
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(userData)
+        .expect(201)
+
+      // 동일한 이메일로 다시 생성 시도
+      const response = await request(app.getHttpServer())
+        .post('/users')
+        .send(userData)
+        .expect(400)
+
+      // Then
+      expect(response.body.message).toContain('이미 존재하는 이메일입니다')
+    })
   })
 
   describe('GET /users/:id', () => {
@@ -135,6 +158,57 @@ describe('User API (e2e)', () => {
       // Check if our users are included
       expect(response.body.some((u) => u.email === user1.email)).toBe(true)
       expect(response.body.some((u) => u.email === user2.email)).toBe(true)
+    })
+
+    it('should get user by email query parameter', async () => {
+      const userData = {
+        email: randEmail(),
+        name: randFirstName(),
+      }
+
+      await request(app.getHttpServer())
+        .post('/users')
+        .send(userData)
+        .expect(201)
+
+      const response = await request(app.getHttpServer())
+        .get(`/users?email=${encodeURIComponent(userData.email)}`)
+        .expect(200)
+
+      expect(response.body).toBeDefined()
+      expect(Array.isArray(response.body)).toBe(true)
+      expect(response.body.length).toBe(1)
+      expect(response.body[0].email).toBe(userData.email)
+      expect(response.body[0].name).toBe(userData.name)
+    })
+
+    it('should return 404 for non-existent email', async () => {
+      const nonExistentEmail = 'non-existent@example.com'
+
+      await request(app.getHttpServer())
+        .get(`/users?email=${nonExistentEmail}`)
+        .expect(404)
+    })
+
+    it('should return empty array when no users exist', async () => {
+      // 테스트를 격리시키기 위해 새로운 앱 인스턴스 생성
+      const isolatedModule = await TestApp.create()
+      const isolatedApp = isolatedModule.createNestApplication()
+      await isolatedApp.init()
+
+      try {
+        // Got
+        const response = await request(isolatedApp.getHttpServer())
+          .get('/users')
+          .expect(200)
+
+        // Then
+        expect(response.body).toBeDefined()
+        expect(Array.isArray(response.body)).toBe(true)
+        expect(response.body.length).toBe(0)
+      } finally {
+        await isolatedApp.close()
+      }
     })
   })
 })
