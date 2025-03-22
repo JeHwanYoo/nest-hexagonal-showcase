@@ -1,7 +1,9 @@
 import { MikroOrmModule } from '@mikro-orm/nestjs/mikro-orm.module'
 import { SqliteDriver } from '@mikro-orm/sqlite'
-import { Module } from '@nestjs/common'
+import { Module, OnModuleInit } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
+import { MikroORM } from '@mikro-orm/core'
+
 @Module({
   imports: [
     MikroOrmModule.forRootAsync({
@@ -23,8 +25,9 @@ import { ConfigService } from '@nestjs/config'
             autoRun: isDevelopment,
           },
           schemaGenerator: {
-            updateSchema: isDevelopment,
+            disableForeignKeys: true,
             createForeignKeyConstraints: true,
+            ignoreSchema: [],
           },
           debug: isDevelopment,
         }
@@ -32,4 +35,16 @@ import { ConfigService } from '@nestjs/config'
     }),
   ],
 })
-export class MikroOrmConfigModule {}
+export class MikroOrmConfigModule implements OnModuleInit {
+  constructor(private readonly orm: MikroORM) {}
+
+  async onModuleInit() {
+    const isDevelopment = process.env.NODE_ENV !== 'production'
+
+    if (isDevelopment) {
+      const generator = this.orm.getSchemaGenerator()
+      await generator.createSchema()
+      await generator.updateSchema()
+    }
+  }
+}
