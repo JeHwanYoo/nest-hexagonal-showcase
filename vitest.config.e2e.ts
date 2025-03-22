@@ -12,6 +12,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       reportsDirectory: './coverage/e2e',
+      include: [
+        '**/*.service.ts',
+        '**/*.port.ts',
+        '**/*.controller.ts',
+        '**/*.repository.ts',
+      ],
       exclude: [
         '**/node_modules/**',
         '**/dist/**',
