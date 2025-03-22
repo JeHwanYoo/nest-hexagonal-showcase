@@ -17,6 +17,7 @@ import {
 } from '../../domain/ports/in/find-user.usecase'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserResponseDto } from './dto/user-response.dto'
+import { ApiBody, ApiOperation } from '@nestjs/swagger'
 
 @Controller('users')
 export class UserController {
@@ -28,6 +29,7 @@ export class UserController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create User' })
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<UserResponseDto> {
@@ -36,6 +38,8 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get User By Id' })
+  @ApiBody({ type: UserResponseDto })
   async getUserById(@Param('id') id: string): Promise<UserResponseDto> {
     const user = await this.findUserUseCase.findOneById(id)
     if (!user) {
@@ -45,6 +49,8 @@ export class UserController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get All Users' })
+  @ApiBody({ type: UserResponseDto, isArray: true })
   async getAllUsers(): Promise<UserResponseDto[]> {
     const users = await this.findUserUseCase.findAll()
     return users.map((user) => UserResponseDto.fromDomain(user))
