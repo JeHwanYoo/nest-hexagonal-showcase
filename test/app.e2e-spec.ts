@@ -93,7 +93,7 @@ describe('User API (e2e)', () => {
         .expect(400)
 
       // Then
-      expect(response.body.message).toContain('이미 존재하는 이메일입니다')
+      expect(response.body.message).toContain('Email already exists')
     })
   })
 
