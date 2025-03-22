@@ -8,7 +8,7 @@ import { SwaggerModule } from '@nestjs/swagger'
 
 const packageJson = JSON.parse(
   fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'),
-)
+) as Record<string, unknown>
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -22,15 +22,14 @@ async function bootstrap() {
   )
 
   if (process.env.NODE_ENV === 'development') {
-    console.log('Swagger is enabled', packageJson)
     const config = new DocumentBuilder()
-      .setTitle(packageJson.name)
-      .setDescription(packageJson.description)
-      .setVersion(packageJson.version)
+      .setTitle(packageJson.name as string)
+      .setDescription(packageJson.description as string)
+      .setVersion(packageJson.version as string)
       .addTag(
-        packageJson.version.startsWith('0.')
+        (packageJson.version as string).startsWith('0.')
           ? 'beta'
-          : `${packageJson.version.split('.')[0]}.x`,
+          : `${(packageJson.version as string).split('.')[0]}.x`,
       )
       .build()
     const documentFactory = () => SwaggerModule.createDocument(app, config)

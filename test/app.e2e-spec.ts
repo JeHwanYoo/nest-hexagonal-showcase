@@ -4,6 +4,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { randEmail, randFirstName } from '@ngneat/falso'
 import { ValidationPipe } from '@nestjs/common'
+import { UserResponseDto } from '@/user/infrastructure/api/dto/user-response.dto'
 
 describe('User API (e2e)', () => {
   let app: INestApplication
@@ -11,14 +12,15 @@ describe('User API (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture = await TestApp.create()
     app = moduleFixture.createNestApplication()
-    
-    // ValidationPipe 추가
-    app.useGlobalPipes(new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }))
-    
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    )
+
     await app.init()
   }, 60000)
 
@@ -40,7 +42,9 @@ describe('User API (e2e)', () => {
       }
 
       // Got
-      const response = await request(app.getHttpServer())
+      const response: { body: UserResponseDto } = await request(
+        app.getHttpServer(),
+      )
         .post('/users')
         .send(userData)
         .expect(201)
@@ -81,7 +85,9 @@ describe('User API (e2e)', () => {
         .expect(201)
 
       // 동일한 이메일로 다시 생성 시도
-      const response = await request(app.getHttpServer())
+      const response: { body: { message: string } } = await request(
+        app.getHttpServer(),
+      )
         .post('/users')
         .send(userData)
         .expect(400)
@@ -99,7 +105,9 @@ describe('User API (e2e)', () => {
         name: randFirstName(),
       }
 
-      const createResponse = await request(app.getHttpServer())
+      const createResponse: { body: UserResponseDto } = await request(
+        app.getHttpServer(),
+      )
         .post('/users')
         .send(userData)
         .expect(201)
@@ -107,7 +115,9 @@ describe('User API (e2e)', () => {
       const userId = createResponse.body.id
 
       // Got
-      const response = await request(app.getHttpServer())
+      const response: { body: UserResponseDto } = await request(
+        app.getHttpServer(),
+      )
         .get(`/users/${userId}`)
         .expect(200)
 
@@ -146,7 +156,9 @@ describe('User API (e2e)', () => {
       await request(app.getHttpServer()).post('/users').send(user2).expect(201)
 
       // Got
-      const response = await request(app.getHttpServer())
+      const response: { body: UserResponseDto[] } = await request(
+        app.getHttpServer(),
+      )
         .get('/users')
         .expect(200)
 
@@ -171,7 +183,9 @@ describe('User API (e2e)', () => {
         .send(userData)
         .expect(201)
 
-      const response = await request(app.getHttpServer())
+      const response: { body: UserResponseDto[] } = await request(
+        app.getHttpServer(),
+      )
         .get(`/users?email=${encodeURIComponent(userData.email)}`)
         .expect(200)
 
@@ -197,7 +211,9 @@ describe('User API (e2e)', () => {
 
       try {
         // Got
-        const response = await request(isolatedApp.getHttpServer())
+        const response: { body: UserResponseDto[] } = await request(
+          isolatedApp.getHttpServer(),
+        )
           .get('/users')
           .expect(200)
 

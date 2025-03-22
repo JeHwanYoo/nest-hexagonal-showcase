@@ -1,6 +1,8 @@
 import { GenericContainer, StartedTestContainer } from 'testcontainers'
-import { mkdirSync, existsSync, unlinkSync, rmSync } from 'fs'
+import { mkdir, unlink, rm } from 'fs/promises'
 import { join } from 'path'
+import { existsSync } from 'fs'
+import { access } from 'fs/promises'
 
 export class SqliteContainer {
   private static container: StartedTestContainer
@@ -10,8 +12,10 @@ export class SqliteContainer {
   static async start(): Promise<StartedTestContainer> {
     if (!this.container) {
       this.testDbDir = join(process.cwd(), 'test-db')
-      if (!existsSync(this.testDbDir)) {
-        mkdirSync(this.testDbDir, { recursive: true })
+      try {
+        await access(this.testDbDir)
+      } catch {
+        await mkdir(this.testDbDir, { recursive: true })
       }
 
       this.dbPath = join(this.testDbDir, 'test.db')
@@ -53,22 +57,22 @@ export class SqliteContainer {
   static async cleanup(): Promise<void> {
     try {
       if (this.dbPath && existsSync(this.dbPath)) {
-        unlinkSync(this.dbPath)
+        await unlink(this.dbPath)
       }
 
       const walFile = `${this.dbPath}-wal`
       const shmFile = `${this.dbPath}-shm`
 
       if (existsSync(walFile)) {
-        unlinkSync(walFile)
+        await unlink(walFile)
       }
 
       if (existsSync(shmFile)) {
-        unlinkSync(shmFile)
+        await unlink(shmFile)
       }
 
       if (this.testDbDir && existsSync(this.testDbDir)) {
-        rmSync(this.testDbDir, { recursive: true, force: true })
+        await rm(this.testDbDir, { recursive: true, force: true })
       }
 
       console.log('Test database files cleaned up')
