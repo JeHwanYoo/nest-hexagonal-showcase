@@ -1,16 +1,21 @@
-import { randomUUID } from 'crypto'
+import { ModelInput } from '@/shared/helper/model'
+import { v7 as uuidv7 } from 'uuid'
 
 export class User {
-  constructor(
-    public readonly id: string,
-    public readonly email: string,
-    public readonly name: string,
-    public readonly createdAt: Date,
-    public readonly updatedAt: Date,
-  ) {}
+  readonly id: string = uuidv7()
+  readonly email: string
+  readonly name: string
+  readonly createdAt: Date = new Date()
+  readonly updatedAt: Date = new Date()
+
+  constructor(user: ModelInput<User>) {
+    Object.assign(this, user)
+  }
 
   static create(email: string, name: string): User {
-    const now = new Date()
-    return new User(randomUUID(), email, name, now, now)
+    return new User({
+      email,
+      name,
+    })
   }
 }
