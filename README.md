@@ -35,7 +35,7 @@ Hexagonal Architecture separates the core business logic from external concerns,
 
 - **Intended for Medium to Large Organizations**: This architecture is designed with medium to large development organizations in mind. Use it when you have clear role and responsibility separation between domains. If you're developing all domains alone, this architecture might be unnecessarily complex.
 
-- **Database Choice**: This showcase uses SQLite for simplicity. In a production environment, select the DBMS that best fits your requirements.
+- **Database Choice**: This showcase uses PostgreSQL. In a production environment, select the DBMS that best fits your requirements.
 
 ## Project Setup
 
@@ -71,21 +71,21 @@ This project implements a layered testing strategy:
 
 - **Location**: `.spec.ts` files in the Infrastructure layer
 - **Target**: Repository implementations
-- **Characteristics**: Database integration tests (using SQLite in-memory database)
+- **Characteristics**: Database integration tests using TestContainers for PostgreSQL
 
 ### E2E Tests
 
 - **Location**: `.e2e-spec.ts` files in the top-level `test` folder
 - **Target**: API endpoints
 - **Characteristics**: Full application integration testing
-- **Requirements**: Docker is required as E2E tests use test containers to provide real database instances
+- **Requirements**: Docker is required as tests use test containers to provide real database instances
 - **Implementation**: TestContainers are used to spin up isolated database instances for testing, ensuring tests run against environments similar to production
 
 ## Requirements
 
 - Node.js v18+
 - pnpm
-- Docker (for E2E tests)
+- Docker (for integration and E2E tests)
 
 ## Test Commands
 
@@ -118,7 +118,7 @@ Tests use Vitest:
 - `vitest.config.ts`: Configuration for unit tests
 - `vitest.config.e2e.ts`: Configuration for E2E tests
 
-Integration tests use SQLite in-memory database: `:memory:`
+Integration tests use TestContainers to provide isolated PostgreSQL database environments.
 
 E2E tests use TestContainers to provide isolated database environments that closely mirror production.
 
