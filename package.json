@@ -86,5 +86,16 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@scarf/scarf",
+      "@swc/core",
+      "cpu-features",
+      "esbuild",
+      "sqlite3",
+      "ssh2"
+    ]
   }
 }
