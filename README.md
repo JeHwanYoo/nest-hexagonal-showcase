@@ -1,3 +1,5 @@
+⚠️ **WORK IN PROGRESS** - This project is currently under active development. Some features may be incomplete or subject to change. ⚠️
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
