@@ -58,6 +58,7 @@ $ docker-compose up --build -d
 Set up the environment variable for database connection:
 
 ```bash
+# .env.development
 # Database connection URL
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 ```
