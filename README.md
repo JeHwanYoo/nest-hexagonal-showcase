@@ -46,11 +46,28 @@ $ pnpm install
 
 ## Running the Project
 
-```bash
-# Development mode
-$ pnpm run start
+### Prerequisites
 
-# Watch mode
+Before starting the application, you need to run PostgreSQL using Docker:
+
+```bash
+# Start PostgreSQL container in background
+$ docker-compose up --build -d
+```
+
+Set up the environment variable for database connection:
+
+```bash
+# Database connection URL
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+```
+
+> **Note**: Docker is required for the local development environment.
+
+### Starting the Application
+
+```bash
+# Watch mode (Development)
 $ pnpm run start:dev
 
 # Production mode
