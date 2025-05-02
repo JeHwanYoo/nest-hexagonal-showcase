@@ -62,7 +62,7 @@ Set up the environment variable for database connection:
 ```bash
 # .env.development
 # Database connection URL
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
+DATABASE_URL=postgresql://postgres:postgres@localhost:54321/postgres
 ```
 
 > **Note**: Docker is required for the local development environment.
