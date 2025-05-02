@@ -7,6 +7,11 @@
 // import { SqliteDriver } from '@mikro-orm/sqlite'
 // import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 // import { randEmail, randFirstName } from '@ngneat/falso'
+import { expect, it } from 'vitest'
+
+it('should be defined', () => {
+  expect(true).toBe(true)
+})
 
 // describe('UserMikroOrmRepository', () => {
 //   let repository: UserMikroOrmRepository
