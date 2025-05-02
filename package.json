@@ -45,6 +45,7 @@
     "@ngneat/falso": "^7.3.0",
     "@swc/cli": "^0.7.3",
     "@swc/core": "^1.11.24",
+    "@testcontainers/postgresql": "^10.25.0",
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.3",

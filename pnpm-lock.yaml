@@ -72,6 +72,9 @@ importers:
       '@swc/core':
         specifier: ^1.11.24
         version: 1.11.24
+      '@testcontainers/postgresql':
+        specifier: ^10.25.0
+        version: 10.25.0
       '@types/express':
         specifier: ^5.0.1
         version: 5.0.1
@@ -1437,6 +1440,9 @@ packages:
   '@szmarczak/http-timer@5.0.1':
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
     engines: {node: '>=14.16'}
+
+  '@testcontainers/postgresql@10.25.0':
+    resolution: {integrity: sha512-VkpqpX9YZ8aq4wfk6sJRopGTmlBdE1kErzAFWJ/1pY/XrEZ7nxdfFBG+En2icQnbv3BIFQYysEKxEFMNB+hQVw==}
 
   '@tokenizer/inflate@0.2.7':
     resolution: {integrity: sha512-MADQgmZT1eKjp06jpI2yozxaU9uVs4GzzgSL+uEq7bVcJ9V1ZXQkeGNql1fsSI0gMy1vhvNTNbUqrx+pZfJVmg==}
@@ -5878,6 +5884,13 @@ snapshots:
   '@szmarczak/http-timer@5.0.1':
     dependencies:
       defer-to-connect: 2.0.1
+
+  '@testcontainers/postgresql@10.25.0':
+    dependencies:
+      testcontainers: 10.25.0
+    transitivePeerDependencies:
+      - bare-buffer
+      - supports-color
 
   '@tokenizer/inflate@0.2.7':
     dependencies:
