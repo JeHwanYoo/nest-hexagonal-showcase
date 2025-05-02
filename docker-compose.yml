@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17.4-alpine
-    container_name: postgres
+    container_name: nest-hexagonal-showcase-postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
