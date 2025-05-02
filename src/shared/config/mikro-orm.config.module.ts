@@ -1,56 +1,65 @@
-// import { MikroOrmModule } from '@mikro-orm/nestjs/mikro-orm.module'
-// import { SqliteDriver } from '@mikro-orm/sqlite'
-// import { Module, OnModuleInit } from '@nestjs/common'
-// import { ConfigService } from '@nestjs/config'
-// import { MikroORM } from '@mikro-orm/core'
+import { MikroORM } from '@mikro-orm/core'
+import { MikroOrmModule } from '@mikro-orm/nestjs/mikro-orm.module'
+import { PostgreSqlDriver } from '@mikro-orm/postgresql'
+import { Logger, Module, OnModuleInit } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 
-// @Module({
-//   imports: [
-//     MikroOrmModule.forRootAsync({
-//       inject: [ConfigService],
-//       useFactory: (configService: ConfigService) => {
-//         const isDevelopment = configService.get('NODE_ENV') !== 'production'
+@Module({
+  imports: [
+    MikroOrmModule.forRootAsync({
+      inject: [ConfigService],
+      driver: PostgreSqlDriver,
+      useFactory: (configService: ConfigService) => {
+        const isDevelopment = configService.get('NODE_ENV') !== 'production'
 
-//         return {
-//           entities: ['./dist/**/*.entity.js'],
-//           entitiesTs: ['./src/**/*.entity.ts'],
-//           dbName: configService.get('DB_NAME') || 'db.sqlite',
-//           driver: SqliteDriver,
-//           discovery: {
-//             warnWhenNoEntities: false,
-//           },
-//           migrations: {
-//             path: './dist/migrations',
-//             pathTs: './src/migrations',
-//             autoRun: isDevelopment,
-//           },
-//           schemaGenerator: {
-//             disableForeignKeys: true,
-//             createForeignKeyConstraints: true,
-//             ignoreSchema: [],
-//           },
-//           debug: isDevelopment,
-//         }
-//       },
-//     }),
-//   ],
-// })
-// export class MikroOrmConfigModule implements OnModuleInit {
-//   constructor(private readonly orm: MikroORM) {}
+        return {
+          autoLoadEntities: true,
+          clientUrl: configService.get('DATABASE_URL'),
+          discovery: {
+            warnWhenNoEntities: false,
+          },
+          migrations: {
+            safe: true,
+            dropTables: false,
+          },
+          driverOptions: {
+            connection: {
+              ssl: isDevelopment
+                ? false
+                : {
+                    rejectUnauthorized: true,
+                  },
+            },
+          },
+          debug: isDevelopment,
+        }
+      },
+    }),
+  ],
+})
+export class MikroOrmConfigModule implements OnModuleInit {
+  private readonly logger = new Logger(MikroOrmConfigModule.name)
 
-//   async onModuleInit() {
-//     const isDevelopment = process.env.NODE_ENV !== 'production'
+  constructor(private readonly orm: MikroORM) {}
 
-//     if (isDevelopment) {
-//       const generator = this.orm.getSchemaGenerator()
-//       await generator.ensureDatabase()
-//       const updateSchemaSql = await generator.getUpdateSchemaSQL()
-//       if (updateSchemaSql) {
-//         await generator.updateSchema({
-//           safe: true,
-//           dropTables: false,
-//         })
-//       }
-//     }
-//   }
-// }
+  async onModuleInit() {
+    const isDevelopment = process.env.NODE_ENV !== 'production'
+
+    if (isDevelopment) {
+      this.logger.debug(
+        'Initializing automatic database migration in development environment',
+      )
+      this.logger.debug(
+        'Warning: This operation may modify database structure and potentially affect data',
+      )
+
+      const generator = this.orm.getSchemaGenerator()
+      await generator.ensureDatabase()
+      const updateSchemaSql = await generator.getUpdateSchemaSQL()
+
+      if (updateSchemaSql) {
+        await generator.updateSchema()
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common'
-import { TestApp } from './helpers/test-app'
+import { TestModuleFactory } from './helpers/test-modules'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { randEmail, randFirstName } from '@ngneat/falso'
@@ -10,7 +10,7 @@ describe('User API (e2e)', () => {
   let app: INestApplication
 
   beforeAll(async () => {
-    const moduleFixture = await TestApp.create()
+    const moduleFixture = await TestModuleFactory.create()
     app = moduleFixture.createNestApplication()
 
     app.useGlobalPipes(
@@ -26,7 +26,7 @@ describe('User API (e2e)', () => {
 
   afterAll(async () => {
     await app.close()
-    await TestApp.cleanup()
+    await TestModuleFactory.cleanupAllInstances()
   })
 
   it('should be defined', () => {
@@ -168,8 +168,8 @@ describe('User API (e2e)', () => {
       expect(response.body.length).toBeGreaterThanOrEqual(2)
 
       // Check if our users are included
-      expect(response.body.some((u) => u.email === user1.email)).toBe(true)
-      expect(response.body.some((u) => u.email === user2.email)).toBe(true)
+      expect(response.body.some(u => u.email === user1.email)).toBe(true)
+      expect(response.body.some(u => u.email === user2.email)).toBe(true)
     })
 
     it('should get user by email query parameter', async () => {
@@ -205,7 +205,7 @@ describe('User API (e2e)', () => {
     })
 
     it('should return empty array when no users exist', async () => {
-      const isolatedModule = await TestApp.create()
+      const isolatedModule = await TestModuleFactory.create()
       const isolatedApp = isolatedModule.createNestApplication()
       await isolatedApp.init()
 
