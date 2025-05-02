@@ -52,7 +52,7 @@ export class UserController {
     }
 
     const users = await this.findUserUseCase.findAll()
-    return users.map((user) => UserResponseDto.fromDomain(user))
+    return users.map(user => UserResponseDto.fromDomain(user))
   }
 
   @Get(':id')

@@ -20,7 +20,7 @@ export class UserMikroOrmRepository implements UserRepositoryPort {
 
   async findAll(): Promise<User[]> {
     const entities = await this.em.find(UserEntity, {})
-    return entities.map((entity) => entity.toDomain())
+    return entities.map(entity => entity.toDomain())
   }
 
   async save(user: User): Promise<User> {
